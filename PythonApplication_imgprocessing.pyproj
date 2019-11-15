@@ -5,7 +5,7 @@
     <ProjectGuid>65dc9926-2f07-44d9-92a2-fc7d78f5d34b</ProjectGuid>
     <ProjectHome>.</ProjectHome>
     <StartupFile>PythonApplication_imgprocessing.py</StartupFile>
-    <SearchPath>..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\Shared\Python37_64</SearchPath>
+    <SearchPath>..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\Shared\Python37_64</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>PythonApplication_imgprocessing</Name>
