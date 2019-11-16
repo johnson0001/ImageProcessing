@@ -1,12 +1,37 @@
 import os
 import cv2
 import glob
+import numpy as np
 
 #グレースケール関数
 def gray_scale(path):
     img = cv2.imread(path, 1) #カラー画像の読み込み
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) #グレースケール変換
     return gray
+
+#ガウシアンフィルタ
+def gaussian(img):
+
+    kernel1 = np.array([[1/16, 1/8, 1/16],
+                        [1/8, 1/4, 1/8],
+                        [1/16, 1/8, 1/16]])
+
+    m, n = kernel1.shape #カーネルサイズ
+    
+    #畳み込み演算をしない領域の幅
+    d = int((m-1)/2)
+    h, w = img.shape[0], img.shape[1]
+
+    #出力画像の配列
+    dst = img.copy()
+
+    for y in range(d, h - d):
+        for x in range(d, w - d):
+            #畳み込み演算
+            dst[y][x] = np.sum(img[y-d:y+d+1, x-d:x+d+1]*kernel1)
+
+    return dst
+
 
 #背景差分関数
 def bg_subtra(background_img, path):
@@ -36,8 +61,9 @@ def bundle(dir, outdir, background_img):
 
         out_path = os.path.join(*[outdir, name + '_fgmask' + ext]) #保存パスを作成
 
-        img = bg_subtra(background_img, i) #背景差分関数を実行
-        cv2.imwrite(out_path, img) #処理後の画像を保存
+        img1 = gray_scale(i) #グレースケール処理
+        img2 = bg_subtra(background_img, img1) #背景差分関数を実行
+        cv2.imwrite(out_path, img2) #処理後の画像を保存
 
     return
 
