@@ -12,10 +12,14 @@ def bg_subtra(bg_img, path):
     gray1 = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
     gray2 = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
 
+    #ガウシアンフィルタ
+    gau1 = cv2.GaussianBlur(gray1, ksize=(3, 3), sigmaX=1.3)
+    gau2 = cv2.GaussianBlur(gray2, ksize=(3, 3), sigmaX=1.3)
+
     #背景差分
     fgbg = cv2.bgsegm.createBackgroundSubtractorMOG()
-    fgmask = fgbg.apply(gray1)
-    fgmask = fgbg.apply(gray2)
+    fgmask = fgbg.apply(gau1)
+    fgmask = fgbg.apply(gau2)
 
     return fgmask
 
