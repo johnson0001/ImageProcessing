@@ -2,27 +2,26 @@ import os
 import cv2
 import glob
 
-#グレースケール関数
-def gray_scale(path):
-    img = cv2.imread(path, 1) #カラー画像の読み込み
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) #グレースケール変換
-    return gray
-
 #背景差分関数
-def bg_subtra(background_img, path):
-    img1 = cv2.imread(background_img, 1)
+def bg_subtra(bg_img, path):
+    #カラー画像読み込み
+    img1 = cv2.imread(bg_img, 1)
     img2 = cv2.imread(path, 1)
 
-    fgbg = cv2.bgsegm.createBackgroundSubtractorMOG()
+    #グレースケール化
+    gray1 = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
+    gray2 = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
 
-    fgmask = fgbg.apply(img1)
-    fgmask = fgbg.apply(img2)
+    #背景差分
+    fgbg = cv2.bgsegm.createBackgroundSubtractorMOG()
+    fgmask = fgbg.apply(gray1)
+    fgmask = fgbg.apply(gray2)
 
     return fgmask
 
 
 #指定されたディレクトリ内のファイル情報を取得する関数
-def bundle(dir, outdir, background_img):
+def bundle(dir, outdir, bg_img):
     path_list = glob.glob(dir + '\*') #指定されたディレクトリ内のすべてのファイルを取得
     name_list = [] #ファイル名の空リストを定義
     ext_list = [] #拡張子の空リストを定義
@@ -36,10 +35,13 @@ def bundle(dir, outdir, background_img):
 
         out_path = os.path.join(*[outdir, name + '_fgmask' + ext]) #保存パスを作成
 
-        img = bg_subtra(background_img, i) #背景差分関数を実行
+
+        img = bg_subtra(bg_img, i) #背景差分関数を実行
+
+
         cv2.imwrite(out_path, img) #処理後の画像を保存
 
     return
 
 #ファイルを探してリサイズする関数を実行
-bundle('C:\\sample_img_bgsub', 'C:\\sample_bgsubimg_bgsub', 'C:\\sample_img_bgsub\\background.bmp')
+bundle('C:\\sample_data', 'C:\\sample_bgsub_ver3', 'C:\\sample_data\\back2.bmp')
